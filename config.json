@@ -1,0 +1,11 @@
+{
+  "study_title": "Executive Attention Study",
+  "questionnaires": [],
+  "tasks": {
+    "pro_anti": "",
+    "verbal_nback": "",
+    "visuospatial_nback": "",
+    "visual_search": ""
+  },
+  "participant_query_parameter": "participant"
+}

@@ -257,7 +257,10 @@ function renderBeforeBegin(state) {
 
     <button id="acknowledge">I understand — begin study</button>
     <p class="muted">Participant ID: ${state.pid}</p>
+    ${devPanel(state)}
   `);
+
+  bindDevPanel(state);
 
   document.getElementById("acknowledge").addEventListener("click", () => {
     state.rulesAcknowledged = true;
@@ -305,9 +308,11 @@ function renderCurrent(state) {
     <p>Continue when you are ready. Only the next assigned component is available.</p>
     <button id="launch">Start ${component.kind === "task" ? `Task ${number}` : "questionnaire"}</button>
     ${CONFIG.mode === "development" ? '<div class="dev">Development mode: this opens a dummy component page.</div>' : ""}
+    ${devPanel(state)}
   `);
 
   document.getElementById("launch").addEventListener("click", () => launchComponent(state, component));
+  bindDevPanel(state);
 }
 
 function launchComponent(state, component) {
@@ -384,7 +389,9 @@ function renderComplete(state) {
     <p>Thank you. You may now close this browser tab.</p>
     <p class="muted">Participant ID: ${state.pid}</p>
     ${CONFIG.mode === "development" ? '<div class="dev">Development completion only. No real task data were collected.</div>' : ""}
+    ${devPanel(state)}
   `);
+  bindDevPanel(state);
 }
 
 function cleanReturnQuery() {

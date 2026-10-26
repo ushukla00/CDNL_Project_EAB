@@ -1,18 +1,18 @@
 {
-  "study_title": "Executive Attention Study",
+  "study_title": "Online Study",
   "mode": "development",
   "verification_file": "uid_verifiers_DEV.json",
   "task_order_file": "task_orders.json",
   "questionnaires": [
     {
       "id": "questionnaire_1",
-      "label": "Questionnaire",
+      "label": "Study Part",
       "enabled": true,
       "url": "dummy.html?component=questionnaire_1"
     },
     {
       "id": "questionnaire_2",
-      "label": "Questionnaire",
+      "label": "Study Part",
       "enabled": true,
       "url": "dummy.html?component=questionnaire_2"
     }

@@ -82,3 +82,26 @@ Participant-facing screens use neutral language:
 - Study complete
 
 Scientific task names, counterbalancing variables, questionnaire IDs, and routing details remain internal only.
+
+## Browser validation evidence
+
+Validated in-browser during development mode:
+
+- P001 / TESTA00001
+  - O13
+  - Key Group A
+  - VS target Blue Circle
+  - VS block order A
+  - completed sequence: questionnaire_1 → questionnaire_2 → visuospatial_nback → pro_anti → verbal_nback → visual_search
+  - final completion reached
+  - deliberate wrong-return test blocked progression
+
+- P003 / TESTB00003
+  - O19
+  - Key Group B
+  - VS target Red Circle
+  - VS block order A
+  - completed sequence: questionnaire_1 → questionnaire_2 → visual_search → pro_anti → verbal_nback → visuospatial_nback
+  - final completion reached
+
+Current controller core status: VALIDATED IMPLEMENTATION in development mode.

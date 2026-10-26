@@ -1,7 +1,7 @@
 {
   "study_title": "Online Study",
   "mode": "development",
-  "verification_file": "uid_verifiers_DEV.json",
+  "verification_file": "uid_verifiers_PROD.json",
   "task_order_file": "task_orders.json",
   "questionnaires": [
     {
@@ -35,5 +35,6 @@
       "url": "https://run.pavlovia.org/ushukla/FCS/"
     }
   },
-  "participant_query_parameter": "participant"
+  "participant_query_parameter": "participant",
+  "verification_scheme": "sha256-128-eabv1"
 }

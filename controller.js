@@ -79,7 +79,7 @@ function participantSequence(pid) {
       sequence.push({
         id: q.id,
         kind: "questionnaire",
-        label: q.label || "Questionnaire",
+        label: q.label || "Study Part",
         url: q.url
       });
     }
@@ -296,7 +296,7 @@ function renderCurrent(state) {
     : `Task ${number} of 4`;
 
   const previousCompleted = state.currentIndex > 0
-    ? `<div class="notice"><strong>Previous component completed.</strong><br>You may take a short break. Keep this browser tab open and continue when you are ready.</div>`
+    ? `<div class="notice"><strong>Previous part completed.</strong><br>You may take a short break. Keep this browser tab open and continue when you are ready.</div>`
     : "";
 
   render(`
@@ -305,8 +305,8 @@ function renderCurrent(state) {
     ${progressHtml(sequence, state)}
     <p class="muted">Component ${state.currentIndex + 1} of ${sequence.length}</p>
     ${previousCompleted}
-    <p>Continue when you are ready. Only the next assigned component is available.</p>
-    <button id="launch">Start ${component.kind === "task" ? `Task ${number}` : "questionnaire"}</button>
+    <p>Continue when you are ready. The next part of the study will open from this page.</p>
+    <button id="launch">Start ${component.kind === "task" ? `Activity ${number}` : "this part"}</button>
     ${CONFIG.mode === "development" ? '<div class="dev">Development mode: this opens a dummy component page.</div>' : ""}
     ${devPanel(state)}
   `);
@@ -317,7 +317,7 @@ function renderCurrent(state) {
 
 function launchComponent(state, component) {
   if (!component.url) {
-    renderCurrentError(state, "This component does not yet have a configured URL.");
+    renderCurrentError(state, "This part of the study is not available yet.");
     return;
   }
 
@@ -331,7 +331,7 @@ function launchComponent(state, component) {
 
 function renderCurrentError(state, message) {
   render(`
-    <h1>Study component unavailable</h1>
+    <h1>Study part unavailable</h1>
     <div class="error">${message}</div>
     <button id="back">Return to study</button>
   `);
@@ -342,12 +342,12 @@ function handleReturn(state, returnedComponent) {
   if (!returnedComponent) return false;
 
   if (!state.expectedReturn) {
-    renderReturnError("No study component was expected to return.");
+    renderReturnError("No study part was expected to return.");
     return true;
   }
 
   if (returnedComponent !== state.expectedReturn) {
-    renderReturnError("This study component was not expected. Progress has not advanced.");
+    renderReturnError("This part of the study was not expected. Your progress has not changed.");
     return true;
   }
 
@@ -355,7 +355,7 @@ function handleReturn(state, returnedComponent) {
   const current = sequence[state.currentIndex];
 
   if (!current || current.id !== returnedComponent) {
-    renderReturnError("Returned component does not match the current study step.");
+    renderReturnError("This return does not match the current part of the study.");
     return true;
   }
 
@@ -385,7 +385,7 @@ function renderComplete(state) {
 
   render(`
     <h1>Study complete</h1>
-    <div class="notice"><strong>All required study components have been completed.</strong></div>
+    <div class="notice"><strong>You have completed all parts of the study.</strong></div>
     <p>Thank you. You may now close this browser tab.</p>
     <p class="muted">Participant ID: ${state.pid}</p>
     ${CONFIG.mode === "development" ? '<div class="dev">Development completion only. No real task data were collected.</div>' : ""}

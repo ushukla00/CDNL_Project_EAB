@@ -36,5 +36,13 @@
     }
   },
   "participant_query_parameter": "participant",
-  "verification_scheme": "sha256-128-eabv1"
+  "verification_scheme": "sha256-128-eabv1",
+  "return_url_query_parameter": "return_url",
+  "return_contract": {
+    "required_parameters": [
+      "return",
+      "participant"
+    ],
+    "note": "External components must return to the controller using the supplied return_url."
+  }
 }

@@ -39,10 +39,10 @@ function bufferToHex(buffer) {
     .join("");
 }
 
-async function deriveVerifier(pid, uid, salt) {
-  const payload = new TextEncoder().encode(`${pid}|${uid}|${salt}`);
+async function deriveVerifier(pid, uid) {
+  const payload = new TextEncoder().encode(`EABv1|${pid}|${uid}`);
   const digest = await crypto.subtle.digest("SHA-256", payload);
-  return bufferToHex(digest);
+  return bufferToHex(digest).slice(0, 32);
 }
 
 function getSession() {
@@ -231,8 +231,8 @@ async function handleLogin(event) {
     return;
   }
 
-  const record = VERIFIERS[pid];
-  if (!record) {
+  const expectedVerifier = VERIFIERS[pid];
+  if (!expectedVerifier) {
     renderLogin(
       CONFIG.mode === "development"
         ? "This PID has no development UID verifier yet."
@@ -241,8 +241,8 @@ async function handleLogin(event) {
     return;
   }
 
-  const derived = await deriveVerifier(pid, uid, record.salt);
-  if (derived !== record.verifier) {
+  const derived = await deriveVerifier(pid, uid);
+  if (derived !== expectedVerifier) {
     renderLogin("The two study codes do not match. Check both codes exactly as provided.");
     return;
   }

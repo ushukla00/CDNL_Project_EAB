@@ -169,7 +169,7 @@ function bindDevPanel(state) {
       if (!current) return;
       state.expectedReturn = current.id;
       saveSession(state);
-      window.location.href = `index.html?return=${encodeURIComponent(current.id)}`;
+      window.location.href = `index.html?return=${encodeURIComponent(current.id)}&participant=${encodeURIComponent(state.pid)}`;
     });
   }
 
@@ -182,7 +182,7 @@ function bindDevPanel(state) {
       state.expectedReturn = current.id;
       saveSession(state);
       const wrongId = current.id === "pro_anti" ? "visual_search" : "pro_anti";
-      window.location.href = `index.html?return=${encodeURIComponent(wrongId)}`;
+      window.location.href = `index.html?return=${encodeURIComponent(wrongId)}&participant=${encodeURIComponent(state.pid)}`;
     });
   }
 
@@ -353,6 +353,13 @@ function renderCurrent(state) {
   bindDevPanel(state);
 }
 
+function controllerReturnUrl(componentId, pid) {
+  const base = new URL("index.html", window.location.href);
+  base.searchParams.set("return", componentId);
+  base.searchParams.set("participant", pid);
+  return base.toString();
+}
+
 function launchComponent(state, component) {
   if (!component.url) {
     renderCurrentError(state, "This part of the study is not available yet.");
@@ -362,9 +369,13 @@ function launchComponent(state, component) {
   state.expectedReturn = component.id;
   saveSession(state);
 
-  const sep = component.url.includes("?") ? "&" : "?";
-  const url = `${component.url}${sep}${encodeURIComponent(CONFIG.participant_query_parameter)}=${encodeURIComponent(state.pid)}`;
-  window.location.href = url;
+  const external = new URL(component.url, window.location.href);
+  external.searchParams.set(CONFIG.participant_query_parameter, state.pid);
+  external.searchParams.set(
+    CONFIG.return_url_query_parameter || "return_url",
+    controllerReturnUrl(component.id, state.pid)
+  );
+  window.location.href = external.toString();
 }
 
 function renderCurrentError(state, message) {
@@ -376,8 +387,13 @@ function renderCurrentError(state, message) {
   document.getElementById("back").addEventListener("click", () => renderCurrent(state));
 }
 
-function handleReturn(state, returnedComponent) {
+function handleReturn(state, returnedComponent, returnedPid) {
   if (!returnedComponent) return false;
+
+  if (!returnedPid || normalizePid(returnedPid) !== state.pid) {
+    renderReturnError("We could not verify the study return. Your progress has not changed.");
+    return true;
+  }
 
   if (!state.expectedReturn) {
     renderReturnError("No study part was expected to return.");
@@ -494,7 +510,9 @@ async function boot() {
 
     document.title = CONFIG.study_title || "Online Study";
 
-    const returnedComponent = new URLSearchParams(window.location.search).get("return");
+    const returnParams = new URLSearchParams(window.location.search);
+    const returnedComponent = returnParams.get("return");
+    const returnedPid = returnParams.get(CONFIG.participant_query_parameter || "participant");
     const state = getSession();
 
     if (!state) {
@@ -512,7 +530,7 @@ async function boot() {
       return;
     }
 
-    if (returnedComponent && handleReturn(state, returnedComponent)) return;
+    if (returnedComponent && handleReturn(state, returnedComponent, returnedPid)) return;
 
     if (!state.rulesAcknowledged) {
       renderBeforeBegin(state);

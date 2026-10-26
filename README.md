@@ -116,3 +116,15 @@ The controller now uses one live Qualtrics questionnaire before the task sequenc
 
 The controller appends the participant query parameter to the questionnaire launch URL.
 The Qualtrics completion redirect back to the controller still needs to be configured in Qualtrics before end-to-end live validation.
+
+## Pavlovia URL integration
+
+Connected using clean participant-facing run URLs only:
+
+- Pro/Anti-saccade → APS
+- Visual Search → FCS
+- Visuospatial N-back → NBS
+
+Verbal N-back remains on the development dummy because the fourth supplied URL duplicated NBS.
+
+Pilot/OAuth query tokens are intentionally excluded from GitHub configuration.

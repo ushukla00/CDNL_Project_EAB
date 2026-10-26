@@ -105,3 +105,14 @@ Validated in-browser during development mode:
   - final completion reached
 
 Current controller core status: VALIDATED IMPLEMENTATION in development mode.
+
+## Live questionnaire integration
+
+The controller now uses one live Qualtrics questionnaire before the task sequence.
+
+- questionnaire_1: live Qualtrics URL connected
+- questionnaire_2: disabled
+- four task URLs remain development dummies
+
+The controller appends the participant query parameter to the questionnaire launch URL.
+The Qualtrics completion redirect back to the controller still needs to be configured in Qualtrics before end-to-end live validation.

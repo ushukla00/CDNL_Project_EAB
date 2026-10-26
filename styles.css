@@ -76,3 +76,29 @@ button:disabled { opacity: .55; cursor: not-allowed; }
 .progress-step { height: 8px; flex: 1; border-radius: 8px; background: #d9dee6; }
 .progress-step.done { background: #2d8a57; }
 .progress-step.current { background: #2457d6; }
+
+.dev-panel {
+  margin-top: 28px;
+  padding: 16px;
+  border: 1px dashed #aab3c2;
+  border-radius: 10px;
+  background: #fafbfc;
+}
+.dev-panel h2 { margin-top: 0; font-size: 16px; }
+.dev-grid { display: flex; gap: 10px; flex-wrap: wrap; }
+.dev-grid button {
+  margin-top: 8px;
+  background: #4b5563;
+  font-size: 14px;
+  padding: 9px 12px;
+}
+.dev-grid button.danger { background: #8a1c1c; }
+.dev-meta {
+  margin-top: 12px;
+  padding: 10px;
+  background: #fff;
+  border: 1px solid #e3e7ed;
+  border-radius: 8px;
+  font: 12px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  white-space: pre-wrap;
+}

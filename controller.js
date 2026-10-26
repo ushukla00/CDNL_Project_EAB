@@ -100,6 +100,81 @@ function participantSequence(pid) {
   return sequence;
 }
 
+
+function devMeta(state) {
+  if (CONFIG.mode !== "development") return "";
+  const assignment = ALLOCATIONS.get(state.pid);
+  const sequence = participantSequence(state.pid);
+  const current = sequence[state.currentIndex] || null;
+  return [
+    `PID: ${state.pid}`,
+    `Task order: ${assignment?.task_order_id || "n/a"}`,
+    `Key group: ${assignment?.key_group || "n/a"}`,
+    `VS target: ${assignment?.vs_target || "n/a"}`,
+    `VS block order: ${assignment?.vs_block_order || "n/a"}`,
+    `Current index: ${state.currentIndex}`,
+    `Current component: ${current?.id || "complete"}`,
+    `Expected return: ${state.expectedReturn || "none"}`,
+    `Completed: ${state.completed.join(", ") || "none"}`
+  ].join("\n");
+}
+
+function devPanel(state) {
+  if (CONFIG.mode !== "development") return "";
+  return `
+    <section class="dev-panel">
+      <h2>Development controls</h2>
+      <div class="dev-grid">
+        <button type="button" id="dev-valid-return">Simulate expected return</button>
+        <button type="button" id="dev-wrong-return">Simulate wrong return</button>
+        <button type="button" id="dev-refresh">Reload page</button>
+        <button type="button" id="dev-reset" class="danger">Reset test session</button>
+      </div>
+      <div class="dev-meta">${devMeta(state)}</div>
+    </section>
+  `;
+}
+
+function bindDevPanel(state) {
+  if (CONFIG.mode !== "development") return;
+
+  const valid = document.getElementById("dev-valid-return");
+  if (valid) {
+    valid.addEventListener("click", () => {
+      const sequence = participantSequence(state.pid);
+      const current = sequence[state.currentIndex];
+      if (!current) return;
+      state.expectedReturn = current.id;
+      saveSession(state);
+      window.location.href = `index.html?return=${encodeURIComponent(current.id)}`;
+    });
+  }
+
+  const wrong = document.getElementById("dev-wrong-return");
+  if (wrong) {
+    wrong.addEventListener("click", () => {
+      const sequence = participantSequence(state.pid);
+      const current = sequence[state.currentIndex];
+      if (!current) return;
+      state.expectedReturn = current.id;
+      saveSession(state);
+      const wrongId = current.id === "pro_anti" ? "visual_search" : "pro_anti";
+      window.location.href = `index.html?return=${encodeURIComponent(wrongId)}`;
+    });
+  }
+
+  const refresh = document.getElementById("dev-refresh");
+  if (refresh) refresh.addEventListener("click", () => window.location.reload());
+
+  const reset = document.getElementById("dev-reset");
+  if (reset) {
+    reset.addEventListener("click", () => {
+      sessionStorage.removeItem(SESSION_KEY);
+      window.location.href = "index.html";
+    });
+  }
+}
+
 function renderLogin(error = "") {
   render(`
     <h1>${CONFIG.study_title}</h1>

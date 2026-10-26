@@ -128,3 +128,18 @@ Connected using clean participant-facing run URLs only:
 Verbal N-back remains on the development dummy because the fourth supplied URL duplicated NBS.
 
 Pilot/OAuth query tokens are intentionally excluded from GitHub configuration.
+
+## One-sitting browser lock
+
+Development controller now uses two browser storage layers:
+
+- `sessionStorage`: active within the current tab/session and carries routing state.
+- `localStorage`: persistent PID status lock for the same browser.
+
+On successful entry, the controller records the PID as `started`.
+On final completion, it records the PID as `completed`.
+If the browser/tab is closed and the same PID attempts to start again in the same browser, ordinary re-entry is blocked.
+
+This is a browser-level operational safeguard. A purely static GitHub Pages controller cannot enforce a global cross-browser/cross-device lock without a server-side service.
+
+Development reset clears both stores so test sessions can be repeated.

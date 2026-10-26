@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Development Component</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="shell">
+    <section class="card">
+      <h1>Development component</h1>
+      <p id="component">Loading…</p>
+      <div class="notice">
+        This page simulates an external questionnaire/task during controller development.
+      </div>
+      <a id="complete" class="button-link" href="#">Simulate successful completion</a>
+    </section>
+  </main>
+<script>
+const params = new URLSearchParams(location.search);
+const component = params.get("component");
+const pid = params.get("participant");
+document.getElementById("component").textContent =
+  component && pid ? `Component: ${component} | Participant: ${pid}` : "Invalid development component URL.";
+document.getElementById("complete").href =
+  component ? `index.html?return=${encodeURIComponent(component)}` : "index.html";
+</script>
+</body>
+</html>

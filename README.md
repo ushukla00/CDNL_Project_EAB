@@ -2,34 +2,46 @@
 
 Current status: private development repository.
 
-This repository contains the candidate static participant-facing controller.
+## Implemented
 
-## Current implementation
-
-Implemented:
 - static HTML/CSS/JavaScript controller;
 - 384-participant counterbalancing lookup;
 - corrected red/blue Visual Search targets;
 - Visual Search block-order A/B allocation;
+- authoritative O01–O24 task-order map;
 - Participant ID + Study UID entry;
 - derived UID verification using SHA-256;
 - no plaintext UID list in the controller;
 - browser `sessionStorage` one-sitting session state;
 - "Before you begin" acknowledgement screen;
-- fail-closed invalid PID / mismatched UID behavior.
+- frozen task-order routing;
+- only the current component is exposed;
+- expected-return validation;
+- component completion advances exactly one step;
+- break/transition state between components;
+- final completion state;
+- dummy external-component page for development testing;
+- fail-closed invalid PID, mismatched UID, missing allocation, and unexpected-return behavior.
 
-Development-only:
-- `uid_verifiers_DEV.json` contains derived verifiers for test PIDs only.
-- Final participant UIDs have not been generated or loaded.
-- questionnaire routing is not connected;
-- Pavlovia URLs are not connected;
-- return/completion routing is not connected.
+## Development-only test credentials
+
+- P001 / TESTA00001
+- P003 / TESTB00003
+
+These are development credentials only.
+
+## Current dummy routing
+
+The four task URLs currently point to `dummy.html`.
+
+The dummy page simulates:
+controller → external component → successful return → controller.
+
+Real questionnaire and Pavlovia URLs have not been inserted.
 
 ## Public/private boundary
 
-Never deploy participant-identifying information here.
-
-Do not include:
+Never include:
 - names;
 - emails;
 - SONA identifiers;
@@ -39,23 +51,6 @@ Do not include:
 - identity ↔ PID ↔ UID linkage;
 - plaintext UID credentials.
 
-The eventual public deployment may contain only the derived UID verification records needed for operational routing.
+## Next implementation phase
 
-## Development test credentials
-
-For local/private development only:
-
-- P001 / TESTA00001
-- P003 / TESTB00003
-
-These are test credentials and must not be used for participants.
-
-## One-sitting behavior
-
-The controller stores active study state in `sessionStorage`.
-
-This supports:
-- normal page refresh;
-- navigation to an external task and return within the same browser tab/session.
-
-Closing the tab/browser ends ordinary browser-session state. This is an operational study-session control, not high-security authentication.
+Validate the routing state machine in-browser while private/local, then connect questionnaire routing and later real Pavlovia URLs.

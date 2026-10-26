@@ -3,7 +3,20 @@
   "mode": "development",
   "verification_file": "uid_verifiers_DEV.json",
   "task_order_file": "task_orders.json",
-  "questionnaires": [],
+  "questionnaires": [
+    {
+      "id": "questionnaire_1",
+      "label": "Questionnaire",
+      "enabled": true,
+      "url": "dummy.html?component=questionnaire_1"
+    },
+    {
+      "id": "questionnaire_2",
+      "label": "Questionnaire",
+      "enabled": true,
+      "url": "dummy.html?component=questionnaire_2"
+    }
+  ],
   "tasks": {
     "Pro/Anti-saccade": {
       "id": "pro_anti",

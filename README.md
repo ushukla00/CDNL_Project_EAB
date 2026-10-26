@@ -63,3 +63,11 @@ Current development sequence is:
 `Questionnaire 1 → Questionnaire 2 → four PID-assigned tasks → completion`
 
 If the final study uses only one questionnaire, set `questionnaire_2.enabled` to `false`. The controller automatically removes it from the participant sequence.
+
+## Development test controls
+
+The private development interface now includes a test panel when `config.json` uses `"mode": "development"`.
+
+It can simulate correct returns, deliberate wrong returns, page reloads, and session resets without requiring live questionnaire or Pavlovia links.
+
+See `DEV_TEST_PLAN.md` for the validation checklist.

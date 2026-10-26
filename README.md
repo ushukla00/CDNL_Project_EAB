@@ -71,3 +71,14 @@ The private development interface now includes a test panel when `config.json` u
 It can simulate correct returns, deliberate wrong returns, page reloads, and session resets without requiring live questionnaire or Pavlovia links.
 
 See `DEV_TEST_PLAN.md` for the validation checklist.
+
+## Participant-facing terminology
+
+Participant-facing screens use neutral language:
+- Online Study
+- Study Part 1 / Study Part 2
+- Activity 1 of 4 through Activity 4 of 4
+- Previous part completed
+- Study complete
+
+Scientific task names, counterbalancing variables, questionnaire IDs, and routing details remain internal only.

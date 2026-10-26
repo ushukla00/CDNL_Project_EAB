@@ -20,7 +20,7 @@
   "tasks": {
     "Pro/Anti-saccade": {
       "id": "pro_anti",
-      "url": "dummy.html?component=pro_anti"
+      "url": "https://run.pavlovia.org/ushukla/APS/"
     },
     "Verbal N-back": {
       "id": "verbal_nback",
@@ -28,11 +28,11 @@
     },
     "Visuospatial N-back": {
       "id": "visuospatial_nback",
-      "url": "dummy.html?component=visuospatial_nback"
+      "url": "https://run.pavlovia.org/ushukla/NBS/"
     },
     "Visual Search": {
       "id": "visual_search",
-      "url": "dummy.html?component=visual_search"
+      "url": "https://run.pavlovia.org/ushukla/FCS/"
     }
   },
   "participant_query_parameter": "participant"

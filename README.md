@@ -37,7 +37,7 @@ The four task URLs currently point to `dummy.html`.
 The dummy page simulates:
 controller → external component → successful return → controller.
 
-Real questionnaire and Pavlovia URLs have not been inserted.
+Real questionnaire and Pavlovia URLs have not been inserted. Questionnaire 2 can be disabled later by setting `enabled` to `false` in `config.json` without changing controller code.
 
 ## Public/private boundary
 
@@ -54,3 +54,12 @@ Never include:
 ## Next implementation phase
 
 Validate the routing state machine in-browser while private/local, then connect questionnaire routing and later real Pavlovia URLs.
+
+
+## Questionnaire routing
+
+Current development sequence is:
+
+`Questionnaire 1 → Questionnaire 2 → four PID-assigned tasks → completion`
+
+If the final study uses only one questionnaire, set `questionnaire_2.enabled` to `false`. The controller automatically removes it from the participant sequence.

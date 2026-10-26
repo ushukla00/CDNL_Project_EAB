@@ -60,3 +60,19 @@ button:disabled { opacity: .55; cursor: not-allowed; }
   color: #687386;
   font-size: 13px;
 }
+
+.button-link {
+  display: inline-block;
+  background: #2457d6;
+  color: #fff;
+  border-radius: 10px;
+  padding: 13px 18px;
+  font-size: 17px;
+  font-weight: 700;
+  text-decoration: none;
+  margin-top: 20px;
+}
+.progress { display: flex; gap: 6px; margin: 20px 0; }
+.progress-step { height: 8px; flex: 1; border-radius: 8px; background: #d9dee6; }
+.progress-step.done { background: #2d8a57; }
+.progress-step.current { background: #2457d6; }

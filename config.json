@@ -8,13 +8,13 @@
       "id": "questionnaire_1",
       "label": "Study Part",
       "enabled": true,
-      "url": "dummy.html?component=questionnaire_1"
+      "url": "https://qualtricsxm47qwpxs84.qualtrics.com/jfe/form/SV_9KqvKyE29G0SWXA"
     },
     {
       "id": "questionnaire_2",
       "label": "Study Part",
-      "enabled": true,
-      "url": "dummy.html?component=questionnaire_2"
+      "enabled": false,
+      "url": ""
     }
   ],
   "tasks": {

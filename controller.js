@@ -1,4 +1,5 @@
 const SESSION_KEY = "eab_study_session_v2";
+const LOCK_KEY = "eab_study_lock_v1";
 
 let CONFIG = null;
 let ALLOCATIONS = new Map();
@@ -59,6 +60,27 @@ function saveSession(state) {
   sessionStorage.setItem(SESSION_KEY, JSON.stringify(state));
 }
 
+function getLock() {
+  const raw = localStorage.getItem(LOCK_KEY);
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw);
+  } catch {
+    localStorage.removeItem(LOCK_KEY);
+    return null;
+  }
+}
+
+function saveLock(lock) {
+  localStorage.setItem(LOCK_KEY, JSON.stringify(lock));
+}
+
+function clearLockForDevelopment() {
+  if (CONFIG.mode === "development") {
+    localStorage.removeItem(LOCK_KEY);
+  }
+}
+
 function render(html) {
   document.getElementById("app").innerHTML = html;
 }
@@ -115,7 +137,8 @@ function devMeta(state) {
     `Current index: ${state.currentIndex}`,
     `Current component: ${current?.id || "complete"}`,
     `Expected return: ${state.expectedReturn || "none"}`,
-    `Completed: ${state.completed.join(", ") || "none"}`
+    `Completed: ${state.completed.join(", ") || "none"}`,
+    `Browser lock: ${JSON.stringify(getLock())}`
   ].join("\n");
 }
 
@@ -170,6 +193,7 @@ function bindDevPanel(state) {
   if (reset) {
     reset.addEventListener("click", () => {
       sessionStorage.removeItem(SESSION_KEY);
+      clearLockForDevelopment();
       window.location.href = "index.html";
     });
   }
@@ -223,6 +247,15 @@ async function handleLogin(event) {
     return;
   }
 
+  const existingLock = getLock();
+  if (existingLock && existingLock.pid === pid) {
+    const message = existingLock.status === "completed"
+      ? "This study ID has already completed the study on this browser."
+      : "This study ID already started a study session on this browser. Please contact the research team if you were unable to finish.";
+    renderLogin(message);
+    return;
+  }
+
   const state = {
     version: 2,
     pid,
@@ -235,6 +268,11 @@ async function handleLogin(event) {
   };
 
   saveSession(state);
+  saveLock({
+    pid,
+    status: "started",
+    startedAt: state.startedAt
+  });
   cleanReturnQuery();
   renderBeforeBegin(state);
 }
@@ -382,6 +420,12 @@ function renderComplete(state) {
   state.sessionActive = false;
   state.completedAt = new Date().toISOString();
   saveSession(state);
+  saveLock({
+    pid: state.pid,
+    status: "completed",
+    startedAt: state.startedAt,
+    completedAt: state.completedAt
+  });
 
   render(`
     <h1>Study complete</h1>

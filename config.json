@@ -1,5 +1,7 @@
 {
   "study_title": "Executive Attention Study",
+  "mode": "development",
+  "verification_file": "uid_verifiers_DEV.json",
   "questionnaires": [],
   "tasks": {
     "pro_anti": "",

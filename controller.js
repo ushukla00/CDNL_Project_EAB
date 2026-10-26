@@ -202,19 +202,19 @@ function bindDevPanel(state) {
 function renderLogin(error = "") {
   render(`
     <h1>${CONFIG.study_title}</h1>
-    <p>Enter the two study codes provided by the research team. You will enter them once at the start of this study session.</p>
+    <p>Enter the two codes provided to you by the research team.</p>
     ${error ? `<div class="error">${error}</div>` : ""}
     <form id="login-form" autocomplete="off">
-      <label for="pid">Participant ID</label>
+      <label for="pid">Participant code</label>
       <input id="pid" name="pid" maxlength="4" placeholder="P001" required>
 
-      <label for="uid">Study UID</label>
-      <input id="uid" name="uid" maxlength="20" placeholder="Study UID" required>
+      <label for="uid">Study code</label>
+      <input id="uid" name="uid" maxlength="20" placeholder="Enter your study code" required>
 
-      <button type="submit">Verify study codes</button>
+      <button type="submit">Continue</button>
     </form>
-    <p class="muted">Your identifying registration information is kept separately from this study controller.</p>
-    ${CONFIG.mode === "development" ? '<div class="dev">Development mode. Final participant credentials and live study links are not loaded.</div>' : ""}
+    <p class="muted">Enter the codes exactly as they were provided to you.</p>
+    ${CONFIG.mode === "development" ? '<div class="dev">Development mode. Participant-facing release is not yet active.</div>' : ""}
   `);
 
   document.getElementById("login-form").addEventListener("submit", handleLogin);
@@ -227,7 +227,7 @@ async function handleLogin(event) {
   const uid = normalizeUid(document.getElementById("uid").value);
 
   if (!validPidFormat(pid) || !ALLOCATIONS.has(pid)) {
-    renderLogin("Study ID not recognized. Check the code exactly as provided.");
+    renderLogin("We could not verify those codes. Check both codes and try again.");
     return;
   }
 
@@ -235,23 +235,23 @@ async function handleLogin(event) {
   if (!expectedVerifier) {
     renderLogin(
       CONFIG.mode === "development"
-        ? "This PID has no development UID verifier yet."
-        : "Study codes could not be verified. Please contact the research team."
+        ? "This participant code is not available in the current development build."
+        : "We could not verify those codes. Please contact the research team if the problem continues."
     );
     return;
   }
 
   const derived = await deriveVerifier(pid, uid);
   if (derived !== expectedVerifier) {
-    renderLogin("The two study codes do not match. Check both codes exactly as provided.");
+    renderLogin("We could not verify those codes. Check both codes and try again.");
     return;
   }
 
   const existingLock = getLock();
   if (existingLock && existingLock.pid === pid) {
     const message = existingLock.status === "completed"
-      ? "This study ID has already completed the study on this browser."
-      : "This study ID already started a study session on this browser. Please contact the research team if you were unable to finish.";
+      ? "This study has already been completed on this browser using these codes."
+      : "A study session has already been started on this browser using these codes. Please contact the research team if you were unable to finish.";
     renderLogin(message);
     return;
   }
@@ -287,14 +287,14 @@ function renderBeforeBegin(state) {
     <p>During the session:</p>
     <ul>
       <li>Keep this browser tab open.</li>
-      <li>Complete each component in the order shown.</li>
+      <li>Complete each part in the order shown.</li>
       <li>You may take short breaks when the study page offers them.</li>
       <li>Do not close the study and return later.</li>
-      <li>Your study data use your Participant ID rather than your identifying registration information.</li>
+      <li>Your study data use your participant code rather than your identifying registration information.</li>
     </ul>
 
     <button id="acknowledge">I understand — begin study</button>
-    <p class="muted">Participant ID: ${state.pid}</p>
+    <p class="muted">Participant code: ${state.pid}</p>
     ${devPanel(state)}
   `);
 
@@ -331,7 +331,7 @@ function renderCurrent(state) {
 
   const title = component.kind === "questionnaire"
     ? component.label
-    : `Task ${number} of 4`;
+    : `Activity ${number} of 4`;
 
   const previousCompleted = state.currentIndex > 0
     ? `<div class="notice"><strong>Previous part completed.</strong><br>You may take a short break. Keep this browser tab open and continue when you are ready.</div>`
@@ -341,7 +341,7 @@ function renderCurrent(state) {
     <h1>${title}</h1>
     <p class="muted">Participant ID: <strong>${state.pid}</strong></p>
     ${progressHtml(sequence, state)}
-    <p class="muted">Component ${state.currentIndex + 1} of ${sequence.length}</p>
+    <p class="muted">Part ${state.currentIndex + 1} of ${sequence.length}</p>
     ${previousCompleted}
     <p>Continue when you are ready. The next part of the study will open from this page.</p>
     <button id="launch">Start ${component.kind === "task" ? `Activity ${number}` : "this part"}</button>
@@ -412,7 +412,7 @@ function renderReturnError(message) {
   render(`
     <h1>Study session error</h1>
     <div class="error">${message}</div>
-    <p>Please do not restart the study with a different code.</p>
+    <p>Your progress has not advanced. Please contact the research team if you cannot continue.</p>
   `);
 }
 
@@ -431,7 +431,7 @@ function renderComplete(state) {
     <h1>Study complete</h1>
     <div class="notice"><strong>You have completed all parts of the study.</strong></div>
     <p>Thank you. You may now close this browser tab.</p>
-    <p class="muted">Participant ID: ${state.pid}</p>
+    <p class="muted">Participant code: ${state.pid}</p>
     ${CONFIG.mode === "development" ? '<div class="dev">Development completion only. No real task data were collected.</div>' : ""}
     ${devPanel(state)}
   `);
@@ -492,7 +492,7 @@ async function boot() {
     ALLOCATIONS = new Map(rows.map(row => [row.pid, row]));
     validateFoundation(rows);
 
-    document.title = CONFIG.study_title || "Executive Attention Study";
+    document.title = CONFIG.study_title || "Online Study";
 
     const returnedComponent = new URLSearchParams(window.location.search).get("return");
     const state = getSession();

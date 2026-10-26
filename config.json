@@ -2,12 +2,25 @@
   "study_title": "Executive Attention Study",
   "mode": "development",
   "verification_file": "uid_verifiers_DEV.json",
+  "task_order_file": "task_orders.json",
   "questionnaires": [],
   "tasks": {
-    "pro_anti": "",
-    "verbal_nback": "",
-    "visuospatial_nback": "",
-    "visual_search": ""
+    "Pro/Anti-saccade": {
+      "id": "pro_anti",
+      "url": "dummy.html?component=pro_anti"
+    },
+    "Verbal N-back": {
+      "id": "verbal_nback",
+      "url": "dummy.html?component=verbal_nback"
+    },
+    "Visuospatial N-back": {
+      "id": "visuospatial_nback",
+      "url": "dummy.html?component=visuospatial_nback"
+    },
+    "Visual Search": {
+      "id": "visual_search",
+      "url": "dummy.html?component=visual_search"
+    }
   },
   "participant_query_parameter": "participant"
 }
